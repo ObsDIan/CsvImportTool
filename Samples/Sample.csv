@@ -1,0 +1,4 @@
+EmpCode,EmpName,DeptName,StartDate,IsEnabled
+A001,王小明,資訊部,2026/07/09,1
+A002,李小華,人資部,2026/07/10,是
+A003,陳大文,財務部,2026/07/11,0

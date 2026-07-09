@@ -1,0 +1,94 @@
+# CSV 資料庫匯入工具 - 第一版
+
+這是一個 C# WPF 桌面工具，用來將 CSV 匯入 SQL Server。
+
+## 第一版功能
+
+- 讀取 CSV
+- 預覽 CSV 內容
+- 連線 SQL Server
+- 讀取資料表清單
+- 讀取資料表欄位資訊
+- 手動設定 CSV 欄位與 DB 欄位對應
+- 依欄位名稱自動對應
+- 驗證必填、型別、文字長度
+- Insert 匯入資料
+- 使用 SQL Transaction，任一筆失敗會整批 Rollback
+- 匯出驗證錯誤 CSV
+
+## 開發環境
+
+建議使用：
+
+- Windows 10 / 11
+- Visual Studio 2022
+- .NET 8 SDK
+- SQL Server / SQL Server Express
+
+## 使用方式
+
+1. 用 Visual Studio 開啟 `CsvImportTool.csproj`
+2. 還原 NuGet 套件
+3. 執行專案
+4. 輸入 SQL Server 連線字串
+5. 點選「讀取資料表」
+6. 選擇資料表後點選「讀取欄位」
+7. 選擇 CSV 並點選「讀取 CSV」
+8. 到「欄位對應」確認 CSV 欄位與 DB 欄位對應
+9. 點選「驗證資料」
+10. 無錯誤後點選「匯入資料」
+
+## 連線字串範例
+
+Windows 驗證：
+
+```text
+Server=localhost\SQLEXPRESS;Database=YourDatabase;Trusted_Connection=True;TrustServerCertificate=True;
+```
+
+SQL Server 帳密驗證：
+
+```text
+Server=localhost\SQLEXPRESS;Database=YourDatabase;User Id=sa;Password=YourPassword;TrustServerCertificate=True;
+```
+
+## 測試資料
+
+`Samples` 資料夾內有：
+
+- `SampleTable.sql`：測試資料表
+- `Sample.csv`：測試 CSV
+
+你可以先在 SQL Server 建立 `dbo.ImportSample`，再用 `Sample.csv` 測試匯入。
+
+## 欄位對應說明
+
+在「欄位對應」頁籤中：
+
+| 欄位 | 說明 |
+|---|---|
+| 匯入 | 是否將此 DB 欄位納入 Insert |
+| DB 欄位 | 目標資料庫欄位 |
+| 型別 | SQL Server 欄位型別 |
+| 長度 | 文字欄位長度 |
+| 必填 | 不允許 NULL、非 Identity、非 Computed、無 Default 的欄位 |
+| CSV 欄位 | 對應來源 CSV 欄位 |
+| 固定值 | 若填入固定值，會優先使用固定值，不使用 CSV 欄位 |
+
+## 注意事項
+
+- 第一版只支援 Insert，不支援 Update / Upsert。
+- 第一版不支援二進位欄位，例如 varbinary、image。
+- Identity 與 Computed 欄位預設不匯入。
+- 建議先用測試資料庫測試，確認欄位對應正確後再匯入正式資料庫。
+- 匯入採整批交易，任何一筆失敗會全部 Rollback。
+
+## 下一版可以加的功能
+
+- 儲存欄位對應設定
+- Update / Upsert
+- 匯入成功 / 失敗 Log
+- 批次大小設定
+- Excel 匯入
+- 匯入前後執行 SQL
+- 更多自訂轉換規則

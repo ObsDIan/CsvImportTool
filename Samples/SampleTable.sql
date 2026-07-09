@@ -1,0 +1,10 @@
+CREATE TABLE dbo.ImportSample
+(
+    Id INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_ImportSample PRIMARY KEY,
+    EmpCode NVARCHAR(20) NOT NULL,
+    EmpName NVARCHAR(50) NOT NULL,
+    DeptName NVARCHAR(50) NULL,
+    StartDate DATE NULL,
+    IsEnabled BIT NOT NULL CONSTRAINT DF_ImportSample_IsEnabled DEFAULT (1),
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_ImportSample_CreatedAt DEFAULT (SYSDATETIME())
+);
