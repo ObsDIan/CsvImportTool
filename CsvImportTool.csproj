@@ -6,6 +6,9 @@
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Version>0.1.0</Version>
+    <Authors>ObsDIan</Authors>
+    <Description>CSV to SQL Server import tool with schema-aware validation.</Description>
   </PropertyGroup>
 
   <ItemGroup>
