@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore CsvImportTool.slnx
+
+      - name: Build
+        run: dotnet build CsvImportTool.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test CsvImportTool.Tests/CsvImportTool.Tests.csproj --configuration Release --no-build
