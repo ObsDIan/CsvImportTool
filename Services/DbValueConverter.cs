@@ -80,6 +80,9 @@ public static class DbValueConverter
                     if (decimal.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out var decimalValue) ||
                         decimal.TryParse(text, NumberStyles.Number, CultureInfo.CurrentCulture, out decimalValue))
                     {
+                        if (!CheckDecimalPrecision(mapping, decimalValue, out errorMessage))
+                            return false;
+
                         value = decimalValue;
                         return true;
                     }
@@ -175,7 +178,10 @@ public static class DbValueConverter
     {
         errorMessage = string.Empty;
 
-        if (mapping.MaxLength <= 0 || mapping.MaxLength == -1)
+        if (mapping.MaxLength <= 0 || mapping.MaxLength == -1 ||
+            mapping.DataType.Equals("text", StringComparison.OrdinalIgnoreCase) ||
+            mapping.DataType.Equals("ntext", StringComparison.OrdinalIgnoreCase) ||
+            mapping.DataType.Equals("xml", StringComparison.OrdinalIgnoreCase))
             return true;
 
         var maxChars = mapping.DataType.Equals("nvarchar", StringComparison.OrdinalIgnoreCase) ||
@@ -188,6 +194,34 @@ public static class DbValueConverter
 
         errorMessage = $"文字長度 {text.Length} 超過欄位上限 {maxChars}。";
         return false;
+    }
+
+    private static bool CheckDecimalPrecision(ColumnMapping mapping, decimal value, out string errorMessage)
+    {
+        errorMessage = string.Empty;
+
+        if (mapping.NumericPrecision == 0)
+            return true;
+
+        var normalized = Math.Abs(value).ToString(CultureInfo.InvariantCulture);
+        var parts = normalized.Split('.');
+        var integerDigits = parts[0].TrimStart('0').Length;
+        var fractionDigits = parts.Length > 1 ? parts[1].TrimEnd('0').Length : 0;
+        var maxIntegerDigits = mapping.NumericPrecision - mapping.NumericScale;
+
+        if (integerDigits > maxIntegerDigits)
+        {
+            errorMessage = $"整數位數 {integerDigits} 超過欄位上限 {maxIntegerDigits}。";
+            return false;
+        }
+
+        if (fractionDigits > mapping.NumericScale)
+        {
+            errorMessage = $"小數位數 {fractionDigits} 超過欄位上限 {mapping.NumericScale}。";
+            return false;
+        }
+
+        return true;
     }
 
     private static bool TryParseBoolean(string text, out bool value)
