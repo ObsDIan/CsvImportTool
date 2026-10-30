@@ -1,6 +1,7 @@
 # CSV 資料庫匯入工具
 
 [![CI](https://github.com/ObsDIan/CsvImportTool/actions/workflows/ci.yml/badge.svg)](https://github.com/ObsDIan/CsvImportTool/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ObsDIan/CsvImportTool?label=Windows%20Release)](https://github.com/ObsDIan/CsvImportTool/releases/latest)
 
 這是一個 C# WPF 桌面工具，用來將 CSV 匯入 SQL Server。
 
@@ -17,6 +18,17 @@
 - Insert 匯入資料
 - 使用 SQL Transaction，任一筆失敗會整批 Rollback
 - 匯出驗證錯誤 CSV
+
+## 下載 Windows 版本
+
+從 [Latest Release](https://github.com/ObsDIan/CsvImportTool/releases/latest) 下載 `CsvImportTool-win-x64.zip`，解壓縮後執行 `CsvImportTool.exe`。
+
+- 支援 Windows 10 / 11 x64。
+- Release 已包含 .NET 8 Runtime，不需另外安裝 Visual Studio 或 .NET。
+- 可使用同一頁提供的 `SHA256SUMS.txt` 驗證下載檔案。
+- 目前執行檔尚未進行商業程式碼簽章，Windows SmartScreen 可能顯示未知發行者警告。
+
+> 建議先連接測試資料庫確認欄位映射，再操作正式資料。
 
 ## 開發環境
 
