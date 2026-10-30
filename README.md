@@ -1,8 +1,10 @@
-# CSV 資料庫匯入工具 - 第一版
+# CSV 資料庫匯入工具
+
+[![CI](https://github.com/ObsDIan/CsvImportTool/actions/workflows/ci.yml/badge.svg)](https://github.com/ObsDIan/CsvImportTool/actions/workflows/ci.yml)
 
 這是一個 C# WPF 桌面工具，用來將 CSV 匯入 SQL Server。
 
-## 第一版功能
+## 功能
 
 - 讀取 CSV
 - 預覽 CSV 內容
@@ -74,6 +76,23 @@ Server=localhost\SQLEXPRESS;Database=YourDatabase;User Id=sa;Password=YourPasswo
 | 必填 | 不允許 NULL、非 Identity、非 Computed、無 Default 的欄位 |
 | CSV 欄位 | 對應來源 CSV 欄位 |
 | 固定值 | 若填入固定值，會優先使用固定值，不使用 CSV 欄位 |
+
+## 開發與測試
+
+```powershell
+dotnet restore CsvImportTool.slnx
+dotnet build CsvImportTool.slnx --configuration Release --no-restore
+dotnet test CsvImportTool.Tests/CsvImportTool.Tests.csproj --configuration Release --no-build
+```
+
+GitHub Actions 會在 Pull Request 與 `master` 更新時自動執行 build 與單元測試。
+
+## 安全與資料正確性
+
+- SQL table／column identifiers 會進行安全 quoting，資料值皆使用 SQL parameters。
+- decimal／numeric 欄位會在匯入前檢查 precision 與 scale。
+- 錯誤 CSV 會處理 `=`, `+`, `-`, `@` 開頭的內容，避免試算表公式注入。
+- 連線字串可能包含密碼，不會儲存在專案檔案中；操作完成後請關閉工具並避免截圖外洩。
 
 ## 注意事項
 
