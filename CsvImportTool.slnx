@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="CsvImportTool.csproj" />
+  <Project Path="CsvImportTool.Tests/CsvImportTool.Tests.csproj" />
 </Solution>
