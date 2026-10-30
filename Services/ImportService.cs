@@ -22,6 +22,9 @@ public sealed class ImportService
         if (selectedMappings.Count == 0)
             throw new InvalidOperationException("沒有任何可匯入欄位，請先設定欄位對應。  ");
 
+        if (csvTable.Rows.Count == 0)
+            throw new InvalidOperationException("CSV 沒有可匯入的資料列。");
+
         var columnSql = string.Join(", ", selectedMappings.Select(x => QuoteName(x.DbColumn)));
         var parameterSql = string.Join(", ", selectedMappings.Select((_, index) => $"@p{index}"));
         var insertSql = $"INSERT INTO {QuoteName(table.SchemaName)}.{QuoteName(table.TableName)} ({columnSql}) VALUES ({parameterSql});";
@@ -71,7 +74,7 @@ public sealed class ImportService
         }
         catch
         {
-            await transaction.RollbackAsync(cancellationToken);
+            await transaction.RollbackAsync(CancellationToken.None);
             throw;
         }
     }
